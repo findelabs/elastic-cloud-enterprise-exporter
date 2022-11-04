@@ -148,7 +148,7 @@ impl State {
                             ("allocator", allocator.public_hostname.to_owned()),
                             ("name", cluster_name.clone()),
                             ("pending", plans_info.pending.to_string()),
-                            ("version", plans_info.version.to_owned()),
+                            ("version", plans_info.version.unwrap_or("0".to_string()).to_owned()),
                             ("zone_count", plans_info.zone_count.unwrap_or(0u64).to_string()),
                         ];
                         metrics::gauge!("ece_allocator_instance_plan", 1f64, &labels);

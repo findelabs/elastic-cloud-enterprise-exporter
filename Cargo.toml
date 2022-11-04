@@ -1,6 +1,6 @@
 [package]
 name = "elastic-cloud-enterprise-exporter"
-version = "0.0.4"
+version = "0.0.5"
 description = "elastic-cloud-enterprise-exporter"
 edition = "2021"
 

@@ -34,7 +34,7 @@ pub struct Memory {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PlansInfo {
     pub pending: bool,
-    pub version: String,
+    pub version: Option<String>,
     pub zone_count: Option<u64>
 }
 
