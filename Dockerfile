@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y libssl-dev pkg-config
 RUN cargo install --path /app --root /app
 RUN strip app/bin/elastic-cloud-enterprise-exporter
 
-FROM debian:bullseye-slim
+FROM rust:slim
 WORKDIR /app
 COPY --from=builder /app/bin/ ./
 
