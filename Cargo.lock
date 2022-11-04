@@ -346,6 +346,35 @@ dependencies = [
 ]
 
 [[package]]
+name = "elastic-cloud-enterprise-exporter"
+version = "0.0.1"
+dependencies = [
+ "axum 0.5.17",
+ "axum-extra",
+ "base64",
+ "chrono",
+ "clap",
+ "env_logger",
+ "http-auth-basic",
+ "hyper",
+ "hyper-tls",
+ "log",
+ "metrics",
+ "metrics-exporter-prometheus",
+ "native-tls",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "serde_yaml",
+ "tokio",
+ "tower",
+ "tower-http 0.1.3",
+ "tracing",
+ "tracing-subscriber",
+ "url",
+]
+
+[[package]]
 name = "encoding_rs"
 version = "0.8.31"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -508,6 +537,15 @@ dependencies = [
  "bytes",
  "fnv",
  "itoa",
+]
+
+[[package]]
+name = "http-auth-basic"
+version = "0.3.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dd2e17aacf7f4a2428def798e2ff4f4f883c0987bdaf47dd5c8bc027bc9f1ebc"
+dependencies = [
+ "base64",
 ]
 
 [[package]]
@@ -1155,34 +1193,6 @@ dependencies = [
  "wasm-bindgen-futures",
  "web-sys",
  "winreg",
-]
-
-[[package]]
-name = "rust-api-template"
-version = "0.0.1"
-dependencies = [
- "axum 0.5.17",
- "axum-extra",
- "base64",
- "chrono",
- "clap",
- "env_logger",
- "hyper",
- "hyper-tls",
- "log",
- "metrics",
- "metrics-exporter-prometheus",
- "native-tls",
- "reqwest",
- "serde",
- "serde_json",
- "serde_yaml",
- "tokio",
- "tower",
- "tower-http 0.1.3",
- "tracing",
- "tracing-subscriber",
- "url",
 ]
 
 [[package]]

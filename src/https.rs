@@ -14,6 +14,7 @@ type BoxResult<T> = std::result::Result<T, Box<dyn Error + Send + Sync>>;
 pub struct HttpsClient(hyper::client::Client<HttpsConnector<HttpConnector>, Body>);
 
 impl HttpsClient {
+    #[allow(dead_code)]
     pub async fn request(&self, req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
         let Self(internal) = self;
         internal.request(req).await
@@ -61,30 +62,37 @@ impl<'a> ClientBuilder<'a> {
         let config = ClientConfig::default();
         Self { config }
     }
+    #[allow(dead_code)]
     pub fn timeout(mut self, arg: u64) -> Self {
         self.config.timeout = arg;
         self
     }
+    #[allow(dead_code)]
     pub fn nodelay(mut self, arg: bool) -> Self {
         self.config.set_nodelay = arg;
         self
     }
+    #[allow(dead_code)]
     pub fn enforce_http(mut self, arg: bool) -> Self {
         self.config.enforce_http = arg;
         self
     }
+    #[allow(dead_code)]
     pub fn reuse_address(mut self, arg: bool) -> Self {
         self.config.set_reuse_address = arg;
         self
     }
+    #[allow(dead_code)]
     pub fn accept_invalid_hostnames(mut self, arg: bool) -> Self {
         self.config.accept_invalid_hostnames = arg;
         self
     }
+    #[allow(dead_code)]
     pub fn accept_invalid_certs(mut self, arg: bool) -> Self {
         self.config.accept_invalid_certs = arg;
         self
     }
+    #[allow(dead_code)]
     pub fn import_cert(mut self, arg: Option<&'a str>) -> Self {
         self.config.import_cert = arg;
         self

@@ -1,6 +1,6 @@
 use axum::{
     handler::Handler,
-    routing::{get, post},
+    routing::{get},
     Router,
     middleware,
     extract::Extension
@@ -9,7 +9,6 @@ use chrono::Local;
 use clap::{crate_name, crate_version, Command, Arg};
 use env_logger::{Builder, Target};
 use log::LevelFilter;
-use std::future::ready;
 use std::io::Write;
 use std::net::SocketAddr;
 use tower_http::trace::TraceLayer;
@@ -19,9 +18,10 @@ mod handlers;
 mod https;
 mod metrics;
 mod state;
+mod allocator;
 
 use crate::metrics::{setup_metrics_recorder, track_metrics};
-use handlers::{echo, handler_404, health, help, root};
+use handlers::{handler_404, health, root, metrics};
 use state::State;
 
 #[tokio::main]
@@ -32,11 +32,38 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .about(crate_name!())
         .arg(
             Arg::new("port")
-                .short('p')
+                .short('P')
                 .long("port")
                 .help("Set port to listen on")
                 .env("RUST_API_LISTEN_PORT")
                 .default_value("8080")
+                .takes_value(true),
+        )
+        .arg(
+            Arg::new("username")
+                .short('u')
+                .long("username")
+                .help("ECE Username")
+                .env("ECE_USERNAME")
+                .required(true)
+                .takes_value(true),
+        )
+        .arg(
+            Arg::new("password")
+                .short('p')
+                .long("password")
+                .help("ECE Password")
+                .env("ECE_PASSWORD")
+                .required(true)
+                .takes_value(true),
+        )
+        .arg(
+            Arg::new("url")
+                .short('U')
+                .long("url")
+                .help("ECE Base URL")
+                .env("ECE_URL")
+                .required(true)
                 .takes_value(true),
         )
         .arg(
@@ -85,15 +112,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     // These should NOT be authenticated
     let standard = Router::new()
         .route("/health", get(health))
-        .route("/echo", post(echo))
-        .route("/help", get(help))
-        .route("/metrics", get(move || ready(recorder_handle.render())));
+        .route("/metrics", get(metrics));
 
     let app = Router::new()
         .merge(base)
         .merge(standard)
         .layer(TraceLayer::new_for_http())
         .route_layer(middleware::from_fn(track_metrics))
+        .layer(Extension(recorder_handle))
         .layer(Extension(state));
 
     // add a fallback service for handling routes to unknown paths

@@ -11,6 +11,9 @@ pub enum Error {
     Forbidden,
     Unauthorized,
     NotFound,
+    UnknownCode,
+    Hyper(hyper::Error),
+    SerdeJson(serde_json::Error),
 }
 
 impl std::error::Error for Error {}
@@ -21,6 +24,9 @@ impl fmt::Display for Error {
             Error::Forbidden => f.write_str("{\"error\": \"Cannot get config: Forbidden\"}"),
             Error::Unauthorized => f.write_str("{\"error\": \"Cannot get config: Unauthorized\"}"),
             Error::NotFound => f.write_str("{\"error\": \"Cannot get config: Not found\"}"),
+            Error::UnknownCode=> f.write_str("{\"error\": \"Caught bad status code\"}"),
+            Error::Hyper(ref err) => write!(f, "{{\"error\": \"{}\"}}", err),
+            Error::SerdeJson(ref err) => write!(f, "{{\"error\": \"{}\"}}", err),
         }
     }
 }
@@ -34,5 +40,18 @@ impl IntoResponse for Error {
             .status(StatusCode::INTERNAL_SERVER_ERROR)
             .body(body)
             .unwrap()
+    }
+}
+
+
+impl From<hyper::Error> for Error {
+    fn from(err: hyper::Error) -> Error {
+        Error::Hyper(err)
+    }
+}
+
+impl From<serde_json::Error> for Error {
+    fn from(err: serde_json::Error) -> Error {
+        Error::SerdeJson(err)
     }
 }
