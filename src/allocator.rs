@@ -42,15 +42,15 @@ pub struct PlansInfo {
 pub struct Instance {
     pub cluster_type: String,
     pub cluster_id: String,
-    pub cluster_name: String,
+    pub cluster_name: Option<String>,
     pub instance_name: String,
     pub node_memory: u64,
-    pub healthy: bool,
-    pub cluster_healthy: bool,
+    pub healthy: Option<bool>,
+    pub cluster_healthy: Option<bool>,
     pub instance_configuration_id: String,
-    pub moving: bool,
-    pub plans_info: PlansInfo,
-    pub deployment_id: String
+    pub moving: Option<bool>,
+    pub plans_info: Option<PlansInfo>,
+    pub deployment_id: Option<String>
 }
 #[derive(Serialize, Deserialize, Debug)]
 pub struct KeyValue {

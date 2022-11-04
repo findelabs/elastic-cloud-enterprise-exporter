@@ -45,7 +45,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
                 .long("username")
                 .help("ECE Username")
                 .env("ECE_USERNAME")
-                .required(true)
+                .required_unless_present("apikey")
                 .takes_value(true),
         )
         .arg(
@@ -54,7 +54,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
                 .long("password")
                 .help("ECE Password")
                 .env("ECE_PASSWORD")
-                .required(true)
+                .required_unless_present("apikey")
+                .takes_value(true),
+        )
+        .arg(
+            Arg::new("apikey")
+                .short('a')
+                .long("apikey")
+                .help("ECE API Key")
+                .env("ECE_APIKEY")
+                .required(false)
+                .conflicts_with("username")
                 .takes_value(true),
         )
         .arg(

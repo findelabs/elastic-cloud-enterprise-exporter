@@ -15,8 +15,9 @@ type BoxResult<T> = Result<T, Box<dyn Error + Send + Sync>>;
 pub struct State {
     pub client: HttpsClient,
     pub url: String,
-    pub username: String,
-    pub password: String
+    pub username: Option<String>,
+    pub password: Option<String>,
+    pub api_key: Option<String>
 }
 
 impl State {
@@ -36,8 +37,9 @@ impl State {
         Ok(State {
             client,
             url: opts.value_of("url").unwrap().to_string(),
-            username: opts.value_of("username").unwrap().to_string(),
-            password: opts.value_of("password").unwrap().to_string(),
+            username: opts.value_of("username").map(str::to_string),
+            password: opts.value_of("password").map(str::to_string),
+            api_key: opts.value_of("apikey").map(str::to_string),
         })
     }
 
@@ -52,9 +54,17 @@ impl State {
             .expect("request builder");
 
         let headers = req.headers_mut();
-        let credentials = Credentials::new(&self.username, &self.password);
-        let credentials = credentials.as_http_header();
-        headers.insert(AUTHORIZATION, HeaderValue::from_str(&credentials).expect("failed to convert credential header"));
+
+        if let Some(api_key) = &self.api_key {
+            let value = format!("ApiKey {}", api_key);
+            log::info!("Adding authorization header: {}", &value);
+            let header = HeaderValue::from_str(&value).expect("failed to convert credential header");
+            headers.insert(AUTHORIZATION, header);
+        } else {
+            let credentials = Credentials::new(&self.username.as_ref().unwrap(), &self.password.as_ref().unwrap());
+            let credentials = credentials.as_http_header();
+            headers.insert(AUTHORIZATION, HeaderValue::from_str(&credentials).expect("failed to convert credential header"));
+        };
         
         // Send initial request
         let response = match self.client.request(req).await {
@@ -99,7 +109,7 @@ impl State {
                 log::debug!("\"Working in allocator: {}\"", allocator.public_hostname);
                 let labels = [
                     ("zone", zone.zone_id.clone()),
-                    ("hostname", allocator.public_hostname.to_string()),
+                    ("hostname", allocator.public_hostname.to_owned()),
                     ("connected", allocator.status.connected.to_string()),
                     ("healthy", allocator.status.healthy.to_string()),
                     ("maintenance", allocator.status.maintenance_mode.to_string()),
@@ -108,31 +118,41 @@ impl State {
 
                 let labels = [
                     ("zone", zone.zone_id.clone()),
-                    ("hostname", allocator.public_hostname.to_string()),
+                    ("hostname", allocator.public_hostname.to_owned()),
                 ];
                 metrics::gauge!("ece_allocator_memory_used", allocator.capacity.memory.used.clone() as f64, &labels);
                 metrics::gauge!("ece_allocator_memory_total", allocator.capacity.memory.total.clone() as f64, &labels);
                 metrics::gauge!("ece_allocator_instances_total", allocator.instances.len() as f64, &labels);
 
                 for instance in allocator.instances {
-                    log::debug!("\"Working in instance: {}\"", instance.cluster_name);
+                    let cluster_name = instance.cluster_name.unwrap_or("null".to_string()).to_owned();
+                    log::debug!("\"Working in instance: {}\"", &cluster_name);
                     let labels = [
                         ("zone", zone.zone_id.clone()),
-                        ("allocator", allocator.public_hostname.to_string()),
-                        ("name", instance.cluster_name.to_string()),
+                        ("allocator", allocator.public_hostname.to_owned()),
+                        ("name", cluster_name.clone()),
                         ("cluster_type", instance.cluster_type.to_string()),
-                        ("cluster_id", instance.cluster_id.to_string()),
-                        ("configuration_id", instance.instance_configuration_id.to_string()),
-                        ("deployment_id", instance.deployment_id.to_string()),
-                        ("healthy", instance.healthy.to_string()),
-                        ("cluster_healthy", instance.cluster_healthy.to_string()),
+                        ("cluster_id", instance.cluster_id.to_owned()),
+                        ("configuration_id", instance.instance_configuration_id.to_owned()),
+                        ("deployment_id", instance.deployment_id.unwrap_or("null".to_string()).to_owned()),
+                        ("healthy", instance.healthy.unwrap_or(false).to_string()),
+                        ("cluster_healthy", instance.cluster_healthy.unwrap_or(false).to_string()),
                         ("node_memory", instance.node_memory.to_string()),
-                        ("moving", instance.moving.to_string()),
-                        ("pending", instance.plans_info.pending.to_string()),
-                        ("version", instance.plans_info.version.to_string()),
-                        ("zone_count", instance.plans_info.zone_count.unwrap_or(0u64).to_string()),
+                        ("moving", instance.moving.unwrap_or(false).to_string()),
                     ];
                     metrics::gauge!("ece_allocator_instance_info", 1f64, &labels);
+
+                    if let Some(plans_info) = instance.plans_info {
+                        let labels = [
+                            ("zone", zone.zone_id.clone()),
+                            ("allocator", allocator.public_hostname.to_owned()),
+                            ("name", cluster_name.clone()),
+                            ("pending", plans_info.pending.to_string()),
+                            ("version", plans_info.version.to_owned()),
+                            ("zone_count", plans_info.zone_count.unwrap_or(0u64).to_string()),
+                        ];
+                        metrics::gauge!("ece_allocator_instance_plan", 1f64, &labels);
+                    }
                 }
             }
         }
