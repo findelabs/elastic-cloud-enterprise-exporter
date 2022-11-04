@@ -57,7 +57,7 @@ impl State {
 
         if let Some(api_key) = &self.api_key {
             let value = format!("ApiKey {}", api_key);
-            log::info!("Adding authorization header: {}", &value);
+            log::debug!("Adding authorization header: {}", &value);
             let header = HeaderValue::from_str(&value).expect("failed to convert credential header");
             headers.insert(AUTHORIZATION, header);
         } else {
