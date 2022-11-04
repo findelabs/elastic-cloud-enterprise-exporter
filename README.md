@@ -1,1 +1,1 @@
-# Rust API Template
+# Elastic Cloud Enterprise Exporter
