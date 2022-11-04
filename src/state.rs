@@ -94,9 +94,9 @@ impl State {
         log::debug!("{:#?}", body);
 
         for zone in body.zones {
-            log::info!("\"Working in zone: {}\"", zone.zone_id);
+            log::debug!("\"Working in zone: {}\"", zone.zone_id);
             for allocator in zone.allocators {
-                log::info!("\"Working in allocator: {}\"", allocator.public_hostname);
+                log::debug!("\"Working in allocator: {}\"", allocator.public_hostname);
                 let labels = [
                     ("zone", zone.zone_id.clone()),
                     ("hostname", allocator.public_hostname.to_string()),
@@ -115,7 +115,7 @@ impl State {
                 metrics::gauge!("ece_allocator_instances_total", allocator.instances.len() as f64, &labels);
 
                 for instance in allocator.instances {
-                    log::info!("\"Working in instance: {}\"", instance.cluster_name);
+                    log::debug!("\"Working in instance: {}\"", instance.cluster_name);
                     let labels = [
                         ("zone", zone.zone_id.clone()),
                         ("allocator", allocator.public_hostname.to_string()),
