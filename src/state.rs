@@ -137,10 +137,19 @@ impl State {
                         ("deployment_id", instance.deployment_id.unwrap_or("null".to_string()).to_owned()),
                         ("healthy", instance.healthy.unwrap_or(false).to_string()),
                         ("cluster_healthy", instance.cluster_healthy.unwrap_or(false).to_string()),
-                        ("node_memory", instance.node_memory.to_string()),
                         ("moving", instance.moving.unwrap_or(false).to_string()),
                     ];
                     metrics::gauge!("ece_allocator_instance_info", 1f64, &labels);
+
+                    let labels = [
+                        ("zone", zone.zone_id.clone()),
+                        ("allocator", allocator.public_hostname.to_owned()),
+                        ("name", cluster_name.clone()),
+                        ("cluster_type", instance.cluster_type.to_string()),
+                        ("cluster_id", instance.cluster_id.to_owned()),
+                        ("node_memory", instance.node_memory.to_string()),
+                    ];
+                    metrics::gauge!("ece_allocator_instance_node_memory", instance.node_memory.clone() as f64, &labels);
 
                     if let Some(plans_info) = instance.plans_info {
                         let labels = [
