@@ -1,6 +1,6 @@
 [package]
 name = "elastic-cloud-enterprise-exporter"
-version = "0.0.8"
+version = "0.0.9"
 description = "elastic-cloud-enterprise-exporter"
 edition = "2021"
 
@@ -25,6 +25,7 @@ native-tls = "0.2"
 base64 = "0.13"
 url = { version = "2", features = ["serde"] }
 metrics = "0.18"
-metrics-exporter-prometheus = "0.8"
+metrics-exporter-prometheus = "0.9"
 axum-extra = "0.1"
 http-auth-basic = "0.3"
+metrics-util = "0.12"
