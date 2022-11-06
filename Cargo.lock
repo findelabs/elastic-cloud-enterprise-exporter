@@ -347,7 +347,7 @@ dependencies = [
 
 [[package]]
 name = "elastic-cloud-enterprise-exporter"
-version = "0.0.8"
+version = "0.0.9"
 dependencies = [
  "axum 0.5.17",
  "axum-extra",

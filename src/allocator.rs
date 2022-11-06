@@ -46,7 +46,7 @@ pub struct Instance {
     pub instance_name: String,
     pub node_memory: u64,
     pub healthy: Option<bool>,
-    pub cluster_healthy: Option<String>,
+    pub cluster_healthy: Option<bool>,
     pub instance_configuration_id: String,
     pub moving: Option<bool>,
     pub plans_info: Option<PlansInfo>,

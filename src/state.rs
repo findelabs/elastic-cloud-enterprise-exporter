@@ -126,6 +126,10 @@ impl State {
 
                 for instance in allocator.instances {
                     let cluster_name = instance.cluster_name.unwrap_or("null".to_string()).to_owned();
+                    let cluster_healthy = match instance.cluster_healthy {
+                        Some(t) => t.to_string(),
+                        None => "null".to_string()
+                    };
                     log::debug!("\"Working in instance: {}\"", &cluster_name);
                     let labels = [
                         ("zone", zone.zone_id.clone()),
@@ -136,7 +140,7 @@ impl State {
                         ("configuration_id", instance.instance_configuration_id.to_owned()),
                         ("deployment_id", instance.deployment_id.unwrap_or("null".to_string()).to_owned()),
                         ("healthy", instance.healthy.unwrap_or(false).to_string()),
-                        ("cluster_healthy", instance.cluster_healthy.unwrap_or("null".to_string()).to_owned()),
+                        ("cluster_healthy", cluster_healthy.to_owned()),
                         ("moving", instance.moving.unwrap_or(false).to_string()),
                     ];
                     metrics::gauge!("ece_allocator_instance_info", 1f64, &labels);
