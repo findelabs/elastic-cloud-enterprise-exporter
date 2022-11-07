@@ -7,7 +7,7 @@ use hyper::header::HeaderValue;
 
 use crate::https::{HttpsClient, ClientBuilder};
 use crate::error::Error as RestError;
-use crate::allocator;
+use crate::{proxy, allocator};
 
 type BoxResult<T> = Result<T, Box<dyn Error + Send + Sync>>;
 
@@ -99,6 +99,31 @@ impl State {
         Ok(value)
     }
 
+    pub async fn get_proxies(&self) -> Result<proxy::ProxiesRoot, RestError> {
+        let body = self.get("api/v1/platform/infrastructure/proxies").await?;
+        let bytes = hyper::body::to_bytes(body.into_body()).await?;
+        let value: proxy::ProxiesRoot = serde_json::from_slice(&bytes)?;
+        Ok(value)
+    }
+
+    pub async fn parse_proxies(&self) -> Result<(), RestError> {
+        let body = self.get_proxies().await?;
+        log::debug!("{:#?}", body);
+
+        for proxy in body.proxies {
+            log::debug!("\"Working on proxy: {}\"", proxy.proxy_id);
+            let labels = [
+                ("zone", proxy.zone.clone()),
+                ("hostname", proxy.public_hostname.to_owned()),
+                ("proxy_id", proxy.proxy_id.to_owned()),
+                ("proxy_ip", proxy.proxy_ip.unwrap_or("null".to_string()).to_owned()),
+                ("healthy", proxy.healthy.to_string()),
+            ];
+            metrics::gauge!("ece_proxy_info", 1f64, &labels);
+        }
+        Ok(())
+    }
+    
     pub async fn parse_allocators(&self) -> Result<(), RestError> {
         let body = self.get_allocators().await?;
         log::debug!("{:#?}", body);
@@ -174,6 +199,7 @@ impl State {
 
     pub async fn get_metrics(&self) -> Result<(), RestError> {
         self.parse_allocators().await?;
+        self.parse_proxies().await?;
         Ok(())
     }
 }
