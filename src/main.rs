@@ -36,7 +36,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
                 .short('P')
                 .long("port")
                 .help("Set port to listen on")
-                .env("RUST_API_LISTEN_PORT")
+                .env("ECE_PORT")
                 .default_value("8080")
                 .takes_value(true),
         )
@@ -83,7 +83,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
                 .long("timeout")
                 .help("Set default global timeout")
                 .default_value("60")
-                .env("RUST_API_TIMEOUT")
+                .env("ECE_TIMEOUT")
                 .takes_value(true),
         )
         .get_matches();
