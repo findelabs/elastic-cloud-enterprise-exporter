@@ -4,6 +4,7 @@ use hyper::{Body, Request, Response};
 use http_auth_basic::Credentials;
 use hyper::header::AUTHORIZATION;
 use hyper::header::HeaderValue;
+use serde_json::Value;
 
 use crate::https::{HttpsClient, ClientBuilder};
 use crate::error::Error as RestError;
@@ -84,8 +85,14 @@ impl State {
             }
             _ => {
                 log::error!(
-                    "Got bad status code getting config: {}",
+                    "Got bad status code from ECE: {}",
                     response.status().as_u16()
+                );
+                let bytes = hyper::body::to_bytes(response.into_body()).await?;
+                let value: Value = serde_json::from_slice(&bytes)?;
+                log::error!(
+                    "Bad response body: {}",
+                    value
                 );
                 return Err(RestError::UnknownCode)
             }
