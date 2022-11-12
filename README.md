@@ -2,6 +2,8 @@
 
 A simple Elastic Cloud Enterprise (ECE) prometheus exporter. 
 
+The exporter is currently able to pull the ECE admin API to gather information on allocator and proxy node metrics.
+
 ### Usage
 
 ```
