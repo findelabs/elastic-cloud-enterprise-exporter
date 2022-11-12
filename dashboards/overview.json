@@ -1,0 +1,2204 @@
+{
+"annotations": {
+"list": [
+{
+"builtIn": 1,
+"datasource": {
+"type": "grafana",
+"uid": "-- Grafana --"
+},
+"enable": true,
+"hide": true,
+"iconColor": "rgba(0, 211, 255, 1)",
+"name": "Annotations & Alerts",
+"target": {
+"limit": 100,
+"matchAny": false,
+"tags": [],
+"type": "dashboard"
+},
+"type": "dashboard"
+}
+]
+},
+"editable": true,
+"fiscalYearStartMonth": 0,
+"graphTooltip": 1,
+"links": [],
+"liveNow": false,
+"panels": [
+{
+"gridPos": {
+"h": 1,
+"w": 24,
+"x": 0,
+"y": 0
+},
+"id": 8,
+"title": "Overview",
+"type": "row"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "thresholds"
+},
+"mappings": [],
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+},
+{
+"color": "red",
+"value": 80
+}
+]
+}
+},
+"overrides": []
+},
+"gridPos": {
+"h": 4,
+"w": 3,
+"x": 0,
+"y": 1
+},
+"id": 2,
+"options": {
+"colorMode": "value",
+"graphMode": "area",
+"justifyMode": "auto",
+"orientation": "auto",
+"reduceOptions": {
+"calcs": [
+"lastNotNull"
+],
+"fields": "",
+"values": false
+},
+"textMode": "auto"
+},
+"pluginVersion": "9.2.3",
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "sum(ece_allocator_info{common_cluster_name=~\"$cluster\",healthy=\"true\"})\n",
+"legendFormat": "__auto",
+"range": true,
+"refId": "A"
+}
+],
+"title": "Healthy Allocators",
+"type": "stat"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "thresholds"
+},
+"mappings": [],
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+},
+{
+"color": "red",
+"value": 80
+}
+]
+}
+},
+"overrides": []
+},
+"gridPos": {
+"h": 4,
+"w": 3,
+"x": 3,
+"y": 1
+},
+"id": 3,
+"options": {
+"colorMode": "value",
+"graphMode": "area",
+"justifyMode": "auto",
+"orientation": "auto",
+"reduceOptions": {
+"calcs": [
+"lastNotNull"
+],
+"fields": "",
+"values": false
+},
+"textMode": "auto"
+},
+"pluginVersion": "9.2.3",
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "sum(ece_allocator_info{common_cluster_name=~\"$cluster\",healthy!=\"true\"}) or vector(0)\n",
+"legendFormat": "__auto",
+"range": true,
+"refId": "A"
+}
+],
+"title": "Unhealthy Allocators",
+"type": "stat"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "thresholds"
+},
+"mappings": [],
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+},
+{
+"color": "red",
+"value": 80
+}
+]
+}
+},
+"overrides": []
+},
+"gridPos": {
+"h": 4,
+"w": 3,
+"x": 6,
+"y": 1
+},
+"id": 4,
+"options": {
+"colorMode": "value",
+"graphMode": "area",
+"justifyMode": "auto",
+"orientation": "auto",
+"reduceOptions": {
+"calcs": [
+"lastNotNull"
+],
+"fields": "",
+"values": false
+},
+"textMode": "auto"
+},
+"pluginVersion": "9.2.3",
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "sum(ece_allocator_info{common_cluster_name=~\"$cluster\",connected!=\"true\"}) or vector(0)\n",
+"legendFormat": "__auto",
+"range": true,
+"refId": "A"
+}
+],
+"title": "Disconnected Allocators",
+"type": "stat"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "thresholds"
+},
+"mappings": [],
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+},
+{
+"color": "red",
+"value": 80
+}
+]
+}
+},
+"overrides": []
+},
+"gridPos": {
+"h": 4,
+"w": 3,
+"x": 9,
+"y": 1
+},
+"id": 6,
+"options": {
+"colorMode": "value",
+"graphMode": "area",
+"justifyMode": "auto",
+"orientation": "auto",
+"reduceOptions": {
+"calcs": [
+"lastNotNull"
+],
+"fields": "",
+"values": false
+},
+"textMode": "auto"
+},
+"pluginVersion": "9.2.3",
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "sum(ece_proxy_info{common_cluster_name=~\"$cluster\",healthy=\"false\"}) or vector(0)\n",
+"legendFormat": "__auto",
+"range": true,
+"refId": "A"
+}
+],
+"title": "Unhealthy Proxies",
+"type": "stat"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "thresholds"
+},
+"mappings": [],
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+},
+{
+"color": "red",
+"value": 80
+}
+]
+},
+"unit": "percentunit"
+},
+"overrides": []
+},
+"gridPos": {
+"h": 4,
+"w": 3,
+"x": 12,
+"y": 1
+},
+"id": 5,
+"options": {
+"colorMode": "value",
+"graphMode": "area",
+"justifyMode": "auto",
+"orientation": "auto",
+"reduceOptions": {
+"calcs": [
+"lastNotNull"
+],
+"fields": "",
+"values": false
+},
+"textMode": "auto"
+},
+"pluginVersion": "9.2.3",
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "sum(ece_allocator_memory_used) / sum(ece_allocator_memory_total)",
+"legendFormat": "__auto",
+"range": true,
+"refId": "A"
+}
+],
+"title": "Allocator RAM Usage",
+"type": "stat"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "thresholds"
+},
+"mappings": [],
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+}
+]
+}
+},
+"overrides": []
+},
+"gridPos": {
+"h": 4,
+"w": 3,
+"x": 15,
+"y": 1
+},
+"id": 9,
+"options": {
+"colorMode": "value",
+"graphMode": "area",
+"justifyMode": "auto",
+"orientation": "auto",
+"reduceOptions": {
+"calcs": [
+"lastNotNull"
+],
+"fields": "",
+"values": false
+},
+"textMode": "auto"
+},
+"pluginVersion": "9.2.3",
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "sum(count by (name) (sum by (name) (ece_allocator_instance_info{common_cluster_name=~\"$cluster\",zone=~\"$zone\"})))\n",
+"hide": false,
+"legendFormat": "__auto",
+"range": true,
+"refId": "B"
+}
+],
+"title": "Elastic Clusters",
+"type": "stat"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "thresholds"
+},
+"mappings": [],
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+},
+{
+"color": "#EAB839",
+"value": 1
+}
+]
+}
+},
+"overrides": []
+},
+"gridPos": {
+"h": 4,
+"w": 3,
+"x": 18,
+"y": 1
+},
+"id": 10,
+"options": {
+"colorMode": "value",
+"graphMode": "area",
+"justifyMode": "auto",
+"orientation": "auto",
+"reduceOptions": {
+"calcs": [
+"lastNotNull"
+],
+"fields": "",
+"values": false
+},
+"textMode": "auto"
+},
+"pluginVersion": "9.2.3",
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"exemplar": false,
+"expr": "count(sum by (name) (ece_allocator_instance_info{common_cluster_name=~\"$cluster\",zone=~\"$zone\",healthy!=\"true\"})) or vector(0)",
+"hide": false,
+"instant": true,
+"legendFormat": "__auto",
+"range": false,
+"refId": "B"
+}
+],
+"title": "Unhealthy Elastic Clusters",
+"type": "stat"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "thresholds"
+},
+"mappings": [],
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+},
+{
+"color": "#EAB839",
+"value": 1
+}
+]
+}
+},
+"overrides": []
+},
+"gridPos": {
+"h": 4,
+"w": 3,
+"x": 21,
+"y": 1
+},
+"id": 11,
+"options": {
+"colorMode": "value",
+"graphMode": "area",
+"justifyMode": "auto",
+"orientation": "auto",
+"reduceOptions": {
+"calcs": [
+"lastNotNull"
+],
+"fields": "",
+"values": false
+},
+"textMode": "auto"
+},
+"pluginVersion": "9.2.3",
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "count(count by (name) (ece_allocator_instance_plan{common_cluster_name=~\"$cluster\",zone=~\"$zone\",pending=\"true\"})) or vector(0)",
+"hide": false,
+"legendFormat": "__auto",
+"range": true,
+"refId": "B"
+}
+],
+"title": "Elastic Pending Plans",
+"type": "stat"
+},
+{
+"collapsed": false,
+"gridPos": {
+"h": 1,
+"w": 24,
+"x": 0,
+"y": 5
+},
+"id": 31,
+"panels": [],
+"title": "Allocators",
+"type": "row"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "palette-classic"
+},
+"custom": {
+"axisCenteredZero": false,
+"axisColorMode": "text",
+"axisLabel": "",
+"axisPlacement": "auto",
+"axisSoftMin": 0,
+"barAlignment": 0,
+"drawStyle": "line",
+"fillOpacity": 0,
+"gradientMode": "none",
+"hideFrom": {
+"legend": false,
+"tooltip": false,
+"viz": false
+},
+"lineInterpolation": "linear",
+"lineWidth": 2,
+"pointSize": 5,
+"scaleDistribution": {
+"type": "linear"
+},
+"showPoints": "auto",
+"spanNulls": false,
+"stacking": {
+"group": "A",
+"mode": "normal"
+},
+"thresholdsStyle": {
+"mode": "off"
+}
+},
+"mappings": [],
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+}
+]
+},
+"unit": "short"
+},
+"overrides": []
+},
+"gridPos": {
+"h": 7,
+"w": 8,
+"x": 0,
+"y": 6
+},
+"id": 29,
+"options": {
+"legend": {
+"calcs": [],
+"displayMode": "table",
+"placement": "right",
+"showLegend": true
+},
+"tooltip": {
+"mode": "single",
+"sort": "none"
+}
+},
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "sum by (zone,common_cluster_name) (ece_allocator_info{common_cluster_name=~\"$cluster\", zone=~\"$zone\", healthy=\"true\"})",
+"legendFormat": "{{common_cluster_name}} {{zone}}",
+"range": true,
+"refId": "A"
+}
+],
+"title": "Healthy Allocators per Zone",
+"type": "timeseries"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "palette-classic"
+},
+"custom": {
+"axisCenteredZero": false,
+"axisColorMode": "text",
+"axisLabel": "",
+"axisPlacement": "auto",
+"barAlignment": 0,
+"drawStyle": "line",
+"fillOpacity": 0,
+"gradientMode": "none",
+"hideFrom": {
+"legend": false,
+"tooltip": false,
+"viz": false
+},
+"lineInterpolation": "linear",
+"lineWidth": 2,
+"pointSize": 5,
+"scaleDistribution": {
+"type": "linear"
+},
+"showPoints": "auto",
+"spanNulls": false,
+"stacking": {
+"group": "A",
+"mode": "none"
+},
+"thresholdsStyle": {
+"mode": "off"
+}
+},
+"mappings": [],
+"min": 0,
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+},
+{
+"color": "red",
+"value": 80
+}
+]
+},
+"unit": "percentunit"
+},
+"overrides": []
+},
+"gridPos": {
+"h": 7,
+"w": 8,
+"x": 8,
+"y": 6
+},
+"id": 33,
+"options": {
+"legend": {
+"calcs": [],
+"displayMode": "table",
+"placement": "right",
+"showLegend": true
+},
+"tooltip": {
+"mode": "single",
+"sort": "none"
+}
+},
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "sum by (common_cluster_name) (ece_allocator_memory_used{common_cluster_name=~\"$cluster\", zone=~\"$zone\"}) / sum by (common_cluster_name) (ece_allocator_memory_total{common_cluster_name=~\"$cluster\", zone=~\"$zone\"})",
+"legendFormat": "{{common_cluster_name }} {{hostname}}",
+"range": true,
+"refId": "A"
+}
+],
+"title": "Cluster Used Percent",
+"type": "timeseries"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "palette-classic"
+},
+"custom": {
+"axisCenteredZero": false,
+"axisColorMode": "text",
+"axisLabel": "",
+"axisPlacement": "auto",
+"barAlignment": 0,
+"drawStyle": "line",
+"fillOpacity": 0,
+"gradientMode": "none",
+"hideFrom": {
+"legend": false,
+"tooltip": false,
+"viz": false
+},
+"lineInterpolation": "linear",
+"lineWidth": 2,
+"pointSize": 5,
+"scaleDistribution": {
+"type": "linear"
+},
+"showPoints": "auto",
+"spanNulls": false,
+"stacking": {
+"group": "A",
+"mode": "none"
+},
+"thresholdsStyle": {
+"mode": "off"
+}
+},
+"mappings": [],
+"min": 0,
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+},
+{
+"color": "red",
+"value": 80
+}
+]
+},
+"unit": "percentunit"
+},
+"overrides": []
+},
+"gridPos": {
+"h": 7,
+"w": 8,
+"x": 16,
+"y": 6
+},
+"id": 35,
+"options": {
+"legend": {
+"calcs": [],
+"displayMode": "table",
+"placement": "right",
+"showLegend": true
+},
+"tooltip": {
+"mode": "single",
+"sort": "none"
+}
+},
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "sum by (common_cluster_name, zone) (ece_allocator_memory_used{common_cluster_name=~\"$cluster\", zone=~\"$zone\"}) / sum by (common_cluster_name, zone) (ece_allocator_memory_total{common_cluster_name=~\"$cluster\", zone=~\"$zone\"})",
+"legendFormat": "{{common_cluster_name }} {{hostname}}",
+"range": true,
+"refId": "A"
+}
+],
+"title": "Cluster Zone Memory Used",
+"type": "timeseries"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "palette-classic"
+},
+"custom": {
+"axisCenteredZero": false,
+"axisColorMode": "text",
+"axisLabel": "",
+"axisPlacement": "auto",
+"axisSoftMin": 0,
+"barAlignment": 0,
+"drawStyle": "line",
+"fillOpacity": 0,
+"gradientMode": "none",
+"hideFrom": {
+"legend": false,
+"tooltip": false,
+"viz": false
+},
+"lineInterpolation": "linear",
+"lineWidth": 2,
+"pointSize": 5,
+"scaleDistribution": {
+"type": "linear"
+},
+"showPoints": "auto",
+"spanNulls": false,
+"stacking": {
+"group": "A",
+"mode": "normal"
+},
+"thresholdsStyle": {
+"mode": "off"
+}
+},
+"mappings": [],
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+}
+]
+},
+"unit": "short"
+},
+"overrides": []
+},
+"gridPos": {
+"h": 7,
+"w": 8,
+"x": 0,
+"y": 13
+},
+"id": 32,
+"options": {
+"legend": {
+"calcs": [],
+"displayMode": "table",
+"placement": "right",
+"showLegend": true
+},
+"tooltip": {
+"mode": "single",
+"sort": "none"
+}
+},
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "sum by (zone,common_cluster_name) (ece_proxy_info{common_cluster_name=~\"$cluster\", zone=~\"$zone\", healthy=\"true\"})",
+"legendFormat": "{{common_cluster_name}} {{zone}}",
+"range": true,
+"refId": "A"
+}
+],
+"title": "Healthy Proxies per Zone",
+"type": "timeseries"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "palette-classic"
+},
+"custom": {
+"axisCenteredZero": false,
+"axisColorMode": "text",
+"axisLabel": "",
+"axisPlacement": "auto",
+"barAlignment": 0,
+"drawStyle": "line",
+"fillOpacity": 0,
+"gradientMode": "none",
+"hideFrom": {
+"legend": false,
+"tooltip": false,
+"viz": false
+},
+"lineInterpolation": "linear",
+"lineWidth": 2,
+"pointSize": 5,
+"scaleDistribution": {
+"type": "linear"
+},
+"showPoints": "auto",
+"spanNulls": false,
+"stacking": {
+"group": "A",
+"mode": "none"
+},
+"thresholdsStyle": {
+"mode": "off"
+}
+},
+"mappings": [],
+"min": 0,
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+},
+{
+"color": "red",
+"value": 80
+}
+]
+},
+"unit": "percentunit"
+},
+"overrides": []
+},
+"gridPos": {
+"h": 7,
+"w": 8,
+"x": 8,
+"y": 13
+},
+"id": 13,
+"options": {
+"legend": {
+"calcs": [],
+"displayMode": "table",
+"placement": "right",
+"showLegend": true
+},
+"tooltip": {
+"mode": "single",
+"sort": "none"
+}
+},
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "ece_allocator_memory_used{common_cluster_name=~\"$cluster\", zone=~\"$zone\"} / ece_allocator_memory_total{common_cluster_name=~\"$cluster\", zone=~\"$zone\"}",
+"legendFormat": "{{common_cluster_name }} {{hostname}}",
+"range": true,
+"refId": "A"
+}
+],
+"title": "Host Memory Used Percent",
+"type": "timeseries"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "palette-classic"
+},
+"custom": {
+"axisCenteredZero": false,
+"axisColorMode": "text",
+"axisLabel": "",
+"axisPlacement": "auto",
+"barAlignment": 0,
+"drawStyle": "line",
+"fillOpacity": 0,
+"gradientMode": "none",
+"hideFrom": {
+"legend": false,
+"tooltip": false,
+"viz": false
+},
+"lineInterpolation": "linear",
+"lineWidth": 2,
+"pointSize": 5,
+"scaleDistribution": {
+"type": "linear"
+},
+"showPoints": "auto",
+"spanNulls": false,
+"stacking": {
+"group": "A",
+"mode": "none"
+},
+"thresholdsStyle": {
+"mode": "off"
+}
+},
+"mappings": [],
+"min": 0,
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+},
+{
+"color": "red",
+"value": 80
+}
+]
+},
+"unit": "decmbytes"
+},
+"overrides": []
+},
+"gridPos": {
+"h": 7,
+"w": 8,
+"x": 16,
+"y": 13
+},
+"id": 34,
+"options": {
+"legend": {
+"calcs": [],
+"displayMode": "table",
+"placement": "right",
+"showLegend": true
+},
+"tooltip": {
+"mode": "single",
+"sort": "none"
+}
+},
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "sum by (zone, common_cluster_name) (ece_allocator_memory_used{common_cluster_name=~\"$cluster\", zone=~\"$zone\"})",
+"legendFormat": "{{ common_cluster_name }} {{ zone }}: used",
+"range": true,
+"refId": "A"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "sum by (zone, common_cluster_name) (ece_allocator_memory_total{common_cluster_name=~\"$cluster\", zone=~\"$zone\"} - ece_allocator_memory_used{common_cluster_name=~\"$cluster\", zone=~\"$zone\"})",
+"hide": false,
+"legendFormat": "{{ common_cluster_name }} {{ zone }}: available",
+"range": true,
+"refId": "B"
+}
+],
+"title": "Zone Memory Usage",
+"type": "timeseries"
+},
+{
+"collapsed": true,
+"gridPos": {
+"h": 1,
+"w": 24,
+"x": 0,
+"y": 20
+},
+"id": 17,
+"panels": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "palette-classic"
+},
+"custom": {
+"axisCenteredZero": false,
+"axisColorMode": "text",
+"axisLabel": "",
+"axisPlacement": "auto",
+"barAlignment": 0,
+"drawStyle": "line",
+"fillOpacity": 0,
+"gradientMode": "none",
+"hideFrom": {
+"legend": false,
+"tooltip": false,
+"viz": false
+},
+"lineInterpolation": "linear",
+"lineWidth": 2,
+"pointSize": 5,
+"scaleDistribution": {
+"type": "linear"
+},
+"showPoints": "auto",
+"spanNulls": false,
+"stacking": {
+"group": "A",
+"mode": "none"
+},
+"thresholdsStyle": {
+"mode": "off"
+}
+},
+"mappings": [],
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+}
+]
+},
+"unit": "decmbytes"
+},
+"overrides": []
+},
+"gridPos": {
+"h": 9,
+"w": 8,
+"x": 0,
+"y": 21
+},
+"id": 19,
+"options": {
+"legend": {
+"calcs": [],
+"displayMode": "table",
+"placement": "right",
+"showLegend": true
+},
+"tooltip": {
+"mode": "single",
+"sort": "none"
+}
+},
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "sum by (name) (ece_allocator_instance_node_memory{common_cluster_name=~\"$cluster\", zone=~\"$zone\", cluster_type=\"elasticsearch\", name=~\"$instance\"})",
+"legendFormat": "{{name}}",
+"range": true,
+"refId": "A"
+}
+],
+"title": "Elastic Cluster Total Size",
+"type": "timeseries"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "palette-classic"
+},
+"custom": {
+"axisCenteredZero": false,
+"axisColorMode": "text",
+"axisLabel": "",
+"axisPlacement": "auto",
+"barAlignment": 0,
+"drawStyle": "line",
+"fillOpacity": 0,
+"gradientMode": "none",
+"hideFrom": {
+"legend": false,
+"tooltip": false,
+"viz": false
+},
+"lineInterpolation": "linear",
+"lineWidth": 2,
+"pointSize": 5,
+"scaleDistribution": {
+"type": "linear"
+},
+"showPoints": "auto",
+"spanNulls": false,
+"stacking": {
+"group": "A",
+"mode": "none"
+},
+"thresholdsStyle": {
+"mode": "off"
+}
+},
+"mappings": [],
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+}
+]
+},
+"unit": "decmbytes"
+},
+"overrides": []
+},
+"gridPos": {
+"h": 9,
+"w": 8,
+"x": 8,
+"y": 21
+},
+"id": 36,
+"options": {
+"legend": {
+"calcs": [],
+"displayMode": "table",
+"placement": "right",
+"showLegend": true
+},
+"tooltip": {
+"mode": "single",
+"sort": "none"
+}
+},
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "sum by (name) (ece_allocator_instance_node_memory{common_cluster_name=~\"$cluster\", zone=~\"$zone\", cluster_type=\"kibana\", name=~\"$instance\"})",
+"legendFormat": "{{name}}",
+"range": true,
+"refId": "A"
+}
+],
+"title": "Kibana Total Size per Cluster",
+"type": "timeseries"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "palette-classic"
+},
+"custom": {
+"axisCenteredZero": false,
+"axisColorMode": "text",
+"axisLabel": "",
+"axisPlacement": "auto",
+"barAlignment": 0,
+"drawStyle": "line",
+"fillOpacity": 0,
+"gradientMode": "none",
+"hideFrom": {
+"legend": false,
+"tooltip": false,
+"viz": false
+},
+"lineInterpolation": "linear",
+"lineWidth": 2,
+"pointSize": 5,
+"scaleDistribution": {
+"type": "linear"
+},
+"showPoints": "auto",
+"spanNulls": false,
+"stacking": {
+"group": "A",
+"mode": "none"
+},
+"thresholdsStyle": {
+"mode": "off"
+}
+},
+"mappings": [],
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+}
+]
+},
+"unit": "short"
+},
+"overrides": []
+},
+"gridPos": {
+"h": 9,
+"w": 8,
+"x": 16,
+"y": 21
+},
+"id": 27,
+"options": {
+"legend": {
+"calcs": [],
+"displayMode": "list",
+"placement": "bottom",
+"showLegend": true
+},
+"tooltip": {
+"mode": "single",
+"sort": "none"
+}
+},
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "sum by (name) (ece_allocator_instance_info{common_cluster_name=~\"$cluster\", zone=~\"$zone\", moving=\"true\", name=~\"$instance\"}) ",
+"legendFormat": "{{name}}",
+"range": true,
+"refId": "A"
+}
+],
+"title": "Elastic Cluster Moving",
+"type": "timeseries"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "palette-classic"
+},
+"custom": {
+"axisCenteredZero": false,
+"axisColorMode": "text",
+"axisLabel": "",
+"axisPlacement": "auto",
+"barAlignment": 0,
+"drawStyle": "line",
+"fillOpacity": 0,
+"gradientMode": "none",
+"hideFrom": {
+"legend": false,
+"tooltip": false,
+"viz": false
+},
+"lineInterpolation": "linear",
+"lineWidth": 2,
+"pointSize": 5,
+"scaleDistribution": {
+"type": "linear"
+},
+"showPoints": "auto",
+"spanNulls": false,
+"stacking": {
+"group": "A",
+"mode": "none"
+},
+"thresholdsStyle": {
+"mode": "off"
+}
+},
+"mappings": [],
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+}
+]
+},
+"unit": "decmbytes"
+},
+"overrides": []
+},
+"gridPos": {
+"h": 9,
+"w": 8,
+"x": 0,
+"y": 30
+},
+"id": 37,
+"options": {
+"legend": {
+"calcs": [],
+"displayMode": "table",
+"placement": "right",
+"showLegend": true
+},
+"tooltip": {
+"mode": "single",
+"sort": "none"
+}
+},
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "sum by (name) (ece_allocator_instance_node_memory{common_cluster_name=~\"$cluster\", zone=~\"$zone\", cluster_type=\"elasticsearch\", name=~\"$instance\"}) / count by (name) (ece_allocator_instance_node_memory{common_cluster_name=~\"$cluster\", zone=~\"$zone\", cluster_type=\"elasticsearch\", name=~\"$instance\"}) ",
+"legendFormat": "{{name}}",
+"range": true,
+"refId": "A"
+}
+],
+"title": "Elastic Cluster Average Node Size",
+"type": "timeseries"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "palette-classic"
+},
+"custom": {
+"axisCenteredZero": false,
+"axisColorMode": "text",
+"axisLabel": "",
+"axisPlacement": "auto",
+"barAlignment": 0,
+"drawStyle": "line",
+"fillOpacity": 0,
+"gradientMode": "none",
+"hideFrom": {
+"legend": false,
+"tooltip": false,
+"viz": false
+},
+"lineInterpolation": "linear",
+"lineWidth": 2,
+"pointSize": 5,
+"scaleDistribution": {
+"type": "linear"
+},
+"showPoints": "auto",
+"spanNulls": false,
+"stacking": {
+"group": "A",
+"mode": "normal"
+},
+"thresholdsStyle": {
+"mode": "off"
+}
+},
+"mappings": [],
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+}
+]
+},
+"unit": "short"
+},
+"overrides": []
+},
+"gridPos": {
+"h": 9,
+"w": 8,
+"x": 8,
+"y": 30
+},
+"id": 24,
+"options": {
+"legend": {
+"calcs": [],
+"displayMode": "list",
+"placement": "bottom",
+"showLegend": true
+},
+"tooltip": {
+"mode": "single",
+"sort": "none"
+}
+},
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "count by (name) (count by (name) (ece_allocator_instance_info{common_cluster_name=~\"$cluster\", zone=~\"$zone\", cluster_healthy=\"false\", name=~\"$instance\"})) > 0",
+"legendFormat": "{{name}}",
+"range": true,
+"refId": "A"
+}
+],
+"title": "Elastic Cluster Unhealthy",
+"type": "timeseries"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "palette-classic"
+},
+"custom": {
+"axisCenteredZero": false,
+"axisColorMode": "text",
+"axisLabel": "",
+"axisPlacement": "auto",
+"barAlignment": 0,
+"drawStyle": "line",
+"fillOpacity": 0,
+"gradientMode": "none",
+"hideFrom": {
+"legend": false,
+"tooltip": false,
+"viz": false
+},
+"lineInterpolation": "linear",
+"lineWidth": 2,
+"pointSize": 5,
+"scaleDistribution": {
+"type": "linear"
+},
+"showPoints": "auto",
+"spanNulls": false,
+"stacking": {
+"group": "A",
+"mode": "none"
+},
+"thresholdsStyle": {
+"mode": "off"
+}
+},
+"mappings": [],
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+}
+]
+},
+"unit": "short"
+},
+"overrides": []
+},
+"gridPos": {
+"h": 9,
+"w": 8,
+"x": 16,
+"y": 30
+},
+"id": 26,
+"options": {
+"legend": {
+"calcs": [],
+"displayMode": "table",
+"placement": "right",
+"showLegend": true
+},
+"tooltip": {
+"mode": "single",
+"sort": "none"
+}
+},
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "count by (zone,name,common_cluster_name) (sum by (zone,name,common_cluster_name) (ece_allocator_instance_plan{common_cluster_name=~\"$cluster\", zone=~\"$zone\", pending=\"true\", name=~\"$instance\"}))",
+"legendFormat": "{{common_cluster_name}} {{zone}}",
+"range": true,
+"refId": "A"
+}
+],
+"title": "Elastic Clusters with Pending Plans",
+"type": "timeseries"
+}
+],
+"title": "ElasticSearch Clusters",
+"type": "row"
+},
+{
+"collapsed": true,
+"gridPos": {
+"h": 1,
+"w": 24,
+"x": 0,
+"y": 21
+},
+"id": 21,
+"panels": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "palette-classic"
+},
+"custom": {
+"axisCenteredZero": false,
+"axisColorMode": "text",
+"axisLabel": "",
+"axisPlacement": "auto",
+"barAlignment": 0,
+"drawStyle": "line",
+"fillOpacity": 0,
+"gradientMode": "none",
+"hideFrom": {
+"legend": false,
+"tooltip": false,
+"viz": false
+},
+"lineInterpolation": "linear",
+"lineWidth": 2,
+"pointSize": 5,
+"scaleDistribution": {
+"type": "linear"
+},
+"showPoints": "auto",
+"spanNulls": false,
+"stacking": {
+"group": "A",
+"mode": "none"
+},
+"thresholdsStyle": {
+"mode": "off"
+}
+},
+"mappings": [],
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+}
+]
+},
+"unit": "short"
+},
+"overrides": []
+},
+"gridPos": {
+"h": 9,
+"w": 8,
+"x": 0,
+"y": 22
+},
+"id": 22,
+"options": {
+"legend": {
+"calcs": [],
+"displayMode": "table",
+"placement": "right",
+"showLegend": true
+},
+"tooltip": {
+"mode": "single",
+"sort": "none"
+}
+},
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "sum by (name) (ece_allocator_instance_info{common_cluster_name=~\"$cluster\", zone=~\"$zone\", cluster_type=\"elasticsearch\", name=~\"$instance\"})",
+"legendFormat": "{{name}}",
+"range": true,
+"refId": "A"
+}
+],
+"title": "Elastic Cluster Container Count",
+"type": "timeseries"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "palette-classic"
+},
+"custom": {
+"axisCenteredZero": false,
+"axisColorMode": "text",
+"axisLabel": "",
+"axisPlacement": "auto",
+"barAlignment": 0,
+"drawStyle": "line",
+"fillOpacity": 0,
+"gradientMode": "none",
+"hideFrom": {
+"legend": false,
+"tooltip": false,
+"viz": false
+},
+"lineInterpolation": "linear",
+"lineWidth": 2,
+"pointSize": 5,
+"scaleDistribution": {
+"type": "linear"
+},
+"showPoints": "auto",
+"spanNulls": false,
+"stacking": {
+"group": "A",
+"mode": "none"
+},
+"thresholdsStyle": {
+"mode": "off"
+}
+},
+"mappings": [],
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+}
+]
+},
+"unit": "short"
+},
+"overrides": []
+},
+"gridPos": {
+"h": 9,
+"w": 8,
+"x": 8,
+"y": 22
+},
+"id": 23,
+"options": {
+"legend": {
+"calcs": [],
+"displayMode": "table",
+"placement": "right",
+"showLegend": true
+},
+"tooltip": {
+"mode": "single",
+"sort": "none"
+}
+},
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "sum by (zone,common_cluster_name) (ece_allocator_instance_info{common_cluster_name=~\"$cluster\", zone=~\"$zone\", healthy=\"false\", name=~\"$instance\"})",
+"legendFormat": "{{common_cluster_name}} {{zone}}",
+"range": true,
+"refId": "A"
+}
+],
+"title": "Elastic Containers Unhealthy per Zone",
+"type": "timeseries"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "palette-classic"
+},
+"custom": {
+"axisCenteredZero": false,
+"axisColorMode": "text",
+"axisLabel": "",
+"axisPlacement": "auto",
+"axisSoftMin": 0,
+"barAlignment": 0,
+"drawStyle": "line",
+"fillOpacity": 0,
+"gradientMode": "none",
+"hideFrom": {
+"legend": false,
+"tooltip": false,
+"viz": false
+},
+"lineInterpolation": "linear",
+"lineWidth": 2,
+"pointSize": 5,
+"scaleDistribution": {
+"type": "linear"
+},
+"showPoints": "auto",
+"spanNulls": false,
+"stacking": {
+"group": "A",
+"mode": "none"
+},
+"thresholdsStyle": {
+"mode": "off"
+}
+},
+"mappings": [],
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+}
+]
+},
+"unit": "short"
+},
+"overrides": []
+},
+"gridPos": {
+"h": 9,
+"w": 8,
+"x": 16,
+"y": 22
+},
+"id": 25,
+"options": {
+"legend": {
+"calcs": [],
+"displayMode": "table",
+"placement": "right",
+"showLegend": true
+},
+"tooltip": {
+"mode": "single",
+"sort": "none"
+}
+},
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "sum by (name) (ece_allocator_instance_info{common_cluster_name=~\"$cluster\", zone=~\"$zone\", healthy=\"false\", name=~\"$instance\"})",
+"legendFormat": "{{name}}",
+"range": true,
+"refId": "A"
+}
+],
+"title": "Elastic Containers Unhealthy",
+"type": "timeseries"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "palette-classic"
+},
+"custom": {
+"axisCenteredZero": false,
+"axisColorMode": "text",
+"axisLabel": "",
+"axisPlacement": "auto",
+"barAlignment": 0,
+"drawStyle": "line",
+"fillOpacity": 0,
+"gradientMode": "none",
+"hideFrom": {
+"legend": false,
+"tooltip": false,
+"viz": false
+},
+"lineInterpolation": "linear",
+"lineWidth": 2,
+"pointSize": 5,
+"scaleDistribution": {
+"type": "linear"
+},
+"showPoints": "auto",
+"spanNulls": false,
+"stacking": {
+"group": "A",
+"mode": "normal"
+},
+"thresholdsStyle": {
+"mode": "off"
+}
+},
+"mappings": [],
+"min": 0,
+"thresholds": {
+"mode": "absolute",
+"steps": [
+{
+"color": "green",
+"value": null
+},
+{
+"color": "red",
+"value": 80
+}
+]
+},
+"unit": "short"
+},
+"overrides": []
+},
+"gridPos": {
+"h": 9,
+"w": 8,
+"x": 0,
+"y": 31
+},
+"id": 15,
+"options": {
+"legend": {
+"calcs": [],
+"displayMode": "table",
+"placement": "right",
+"showLegend": true
+},
+"tooltip": {
+"mode": "single",
+"sort": "none"
+}
+},
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"editorMode": "code",
+"expr": "sum by (zone, common_cluster_name) (ece_allocator_instances_total{common_cluster_name=~\"$cluster\", zone=~\"$zone\"})",
+"legendFormat": "{{ common_cluster_name }} {{ zone }}",
+"range": true,
+"refId": "A"
+}
+],
+"title": "Containers Deployed per Zone",
+"type": "timeseries"
+}
+],
+"title": "Elasticsearch Containers",
+"type": "row"
+}
+],
+"refresh": false,
+"schemaVersion": 37,
+"style": "dark",
+"tags": [
+"elasticsearch"
+],
+"templating": {
+"list": [
+{
+"current": {
+"selected": false,
+"text": "default",
+"value": "default"
+},
+"hide": 0,
+"includeAll": false,
+"multi": false,
+"name": "datasource",
+"options": [],
+"query": "prometheus",
+"queryValue": "",
+"refresh": 1,
+"regex": "",
+"skipUrlSync": false,
+"type": "datasource"
+},
+{
+"current": {
+"selected": false,
+"text": "All",
+"value": "$__all"
+},
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"definition": "label_values(ece_allocator_info,common_cluster_name)",
+"hide": 0,
+"includeAll": true,
+"multi": false,
+"name": "cluster",
+"options": [],
+"query": {
+"query": "label_values(ece_allocator_info,common_cluster_name)",
+"refId": "StandardVariableQuery"
+},
+"refresh": 1,
+"regex": "",
+"skipUrlSync": false,
+"sort": 1,
+"type": "query"
+},
+{
+"current": {
+"selected": true,
+"text": [
+"All"
+],
+"value": [
+"$__all"
+]
+},
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"definition": "label_values(ece_allocator_info{common_cluster_name=~\"$cluster\"},zone)",
+"hide": 0,
+"includeAll": true,
+"multi": true,
+"name": "zone",
+"options": [],
+"query": {
+"query": "label_values(ece_allocator_info{common_cluster_name=~\"$cluster\"},zone)",
+"refId": "StandardVariableQuery"
+},
+"refresh": 1,
+"regex": "",
+"skipUrlSync": false,
+"sort": 1,
+"type": "query"
+},
+{
+"current": {
+"selected": true,
+"text": [
+"All"
+],
+"value": [
+"$__all"
+]
+},
+"datasource": {
+"type": "prometheus",
+"uid": "${datasource}"
+},
+"definition": "label_values(ece_allocator_instance_info{common_cluster_name=~\"$cluster\", zone=~\"$zone\"},name)",
+"hide": 0,
+"includeAll": true,
+"multi": true,
+"name": "instance",
+"options": [],
+"query": {
+"query": "label_values(ece_allocator_instance_info{common_cluster_name=~\"$cluster\", zone=~\"$zone\"},name)",
+"refId": "StandardVariableQuery"
+},
+"refresh": 1,
+"regex": "",
+"skipUrlSync": false,
+"sort": 1,
+"type": "query"
+}
+]
+},
+"time": {
+"from": "now-1h",
+"to": "now"
+},
+"timepicker": {
+"refresh_intervals": [
+"30s",
+"1m",
+"5m",
+"15m",
+"30m",
+"1h",
+"2h",
+"1d"
+]
+},
+"timezone": "",
+"title": "ECE Overview",
+"uid": "mcdaclSrVkmDVcdz",
+"version": 1,
+"weekStart": ""
+}
