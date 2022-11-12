@@ -2,7 +2,7 @@
 
 A simple Elastic Cloud Enterprise (ECE) prometheus exporter. 
 
-The exporter is currently able to pull the ECE admin API to gather information on allocator and proxy node metrics.
+The exporter is currently able to pull the ECE admin API to gather information on allocator and proxy node metrics. You can view the published docker images [here](https://hub.docker.com/repository/docker/findelabs/elastic-cloud-enterprise-exporter).
 
 ### Usage
 
