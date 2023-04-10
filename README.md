@@ -10,6 +10,7 @@ A grafana dashboard is also available to use within the dashboards folder.
 
 ```
     -a, --apikey <apikey>        ECE API Key [env: ECE_APIKEY=]
+    -e, --eru_cost <eru_cost>    Set elastic cost per ERU [env: ECE_ERU_COST=] [default: 6000]
     -h, --help                   Print help information
     -p, --password <password>    ECE Password [env: ECE_PASSWORD=]
     -P, --port <port>            Set port to listen on [env: ECE_PORT=] [default: 8080]
