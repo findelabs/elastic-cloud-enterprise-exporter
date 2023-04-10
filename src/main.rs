@@ -86,6 +86,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
                 .env("ECE_TIMEOUT")
                 .takes_value(true),
         )
+        .arg(
+            Arg::new("eru_cost")
+                .short('e')
+                .long("eru_cost")
+                .help("Set elastic cost per ERU")
+                .default_value("6000")
+                .env("ECE_ERU_COST")
+                .takes_value(true),
+        )
         .get_matches();
 
     // Initialize log Builder

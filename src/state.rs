@@ -5,6 +5,10 @@ use http_auth_basic::Credentials;
 use hyper::header::AUTHORIZATION;
 use hyper::header::HeaderValue;
 use serde_json::Value;
+use chrono::Datelike;
+use chrono::NaiveDate;
+use chrono::DateTime;
+use chrono::Utc;
 
 use crate::https::{HttpsClient, ClientBuilder};
 use crate::error::Error as RestError;
@@ -18,7 +22,8 @@ pub struct State {
     pub url: String,
     pub username: Option<String>,
     pub password: Option<String>,
-    pub api_key: Option<String>
+    pub api_key: Option<String>,
+    pub eru_cost: u64
 }
 
 impl State {
@@ -33,6 +38,15 @@ impl State {
                 60
             });
 
+        let eru_cost: u64 = opts
+            .value_of("eru_cost")
+            .unwrap()
+            .parse()
+            .unwrap_or_else(|_| {
+                eprintln!("ERU cost is not with available range, defaulting to 6000");
+                60
+            });
+
         let client = ClientBuilder::new().timeout(timeout).build()?;
 
         Ok(State {
@@ -41,6 +55,7 @@ impl State {
             username: opts.value_of("username").map(str::to_string),
             password: opts.value_of("password").map(str::to_string),
             api_key: opts.value_of("apikey").map(str::to_string),
+            eru_cost
         })
     }
 
@@ -135,6 +150,14 @@ impl State {
         let body = self.get_allocators().await?;
         log::debug!("{:#?}", body);
 
+        // Calculate seconds since month start
+        let now = chrono::Utc::now();
+        let month_start = NaiveDate::from_ymd_opt(now.year(), now.month(), now.day()).unwrap().and_hms_opt(0, 0, 0).unwrap();
+        let month_start_utc = DateTime::<Utc>::from_utc(month_start, Utc);
+        let seconds_since_month_start = now.signed_duration_since(month_start_utc).num_seconds() as f64;
+        let cost_per_second = 64f64 * self.eru_cost as f64 / 31536000f64;
+        let monthly_cents_per_gb = seconds_since_month_start / 1024f64 / 1024f64 / cost_per_second;
+
         for zone in body.zones {
             log::debug!("\"Working in zone: {}\"", zone.zone_id);
             for allocator in zone.allocators {
@@ -182,10 +205,13 @@ impl State {
                         ("allocator", allocator.public_hostname.to_owned()),
                         ("name", cluster_name.clone()),
                         ("cluster_type", instance.cluster_type.to_string()),
-                        ("cluster_id", instance.cluster_id.to_owned()),
-                        ("node_memory", instance.node_memory.to_string()),
+                        ("cluster_id", instance.cluster_id.to_owned())
                     ];
                     metrics::gauge!("ece_allocator_instance_node_memory", instance.node_memory.clone() as f64, &labels);
+
+                    // Get instance cost per month
+                    let cost_for_month = instance.node_memory as f64 * monthly_cents_per_gb;
+                    metrics::gauge!("ece_allocator_instance_monthly_cost", cost_for_month as f64, &labels);
 
                     if let Some(plans_info) = instance.plans_info {
                         let labels = [
