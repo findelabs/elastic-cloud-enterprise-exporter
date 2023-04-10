@@ -155,8 +155,9 @@ impl State {
         let month_start = NaiveDate::from_ymd_opt(now.year(), now.month(), now.day()).unwrap().and_hms_opt(0, 0, 0).unwrap();
         let month_start_utc = DateTime::<Utc>::from_utc(month_start, Utc);
         let seconds_since_month_start = now.signed_duration_since(month_start_utc).num_seconds() as f64;
-        let cost_per_second = 64f64 * self.eru_cost as f64 / 31536000f64;
-        let monthly_cents_per_gb = seconds_since_month_start / 1024f64 / 1024f64 / cost_per_second;
+
+        let cents_per_second = 64f64 * self.eru_cost as f64 * 100.0 / 31536000f64;
+        let monthly_cents = seconds_since_month_start / 1024f64 * cents_per_second;
 
         for zone in body.zones {
             log::debug!("\"Working in zone: {}\"", zone.zone_id);
@@ -210,7 +211,7 @@ impl State {
                     metrics::gauge!("ece_allocator_instance_node_memory", instance.node_memory.clone() as f64, &labels);
 
                     // Get instance cost per month
-                    let cost_for_month = instance.node_memory as f64 * monthly_cents_per_gb;
+                    let cost_for_month = instance.node_memory as f64 * monthly_cents;
                     metrics::gauge!("ece_allocator_instance_monthly_cost", cost_for_month as f64, &labels);
 
                     if let Some(plans_info) = instance.plans_info {
