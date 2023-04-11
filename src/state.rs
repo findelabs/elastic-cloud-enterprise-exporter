@@ -152,9 +152,15 @@ impl State {
 
         // Calculate seconds since month start
         let now = chrono::Utc::now();
-        let month_start = NaiveDate::from_ymd_opt(now.year(), now.month(), now.day()).unwrap().and_hms_opt(0, 0, 0).unwrap();
+        let month_start = NaiveDate::from_ymd_opt(now.year(), now.month(), 1u32).unwrap().and_hms_opt(0, 0, 0).unwrap();
         let month_start_utc = DateTime::<Utc>::from_utc(month_start, Utc);
         let seconds_since_month_start = now.signed_duration_since(month_start_utc).num_seconds() as f64;
+
+        log::debug!("\"Seconds in month: {}\"", seconds_since_month_start);
+
+        // Cents per GB for current month
+        let cents_per_gb_current_month: f64 = ( self.eru_cost as f64 * 100.0 / 31536000.0 ) * seconds_since_month_start; 
+        log::debug!("\"cents per gb for current month: {}\"", cents_per_gb_current_month);
 
         for zone in body.zones {
             log::debug!("\"Working in zone: {}\"", zone.zone_id);
@@ -210,14 +216,7 @@ impl State {
                     // Size of cluster in GB: {{ Cluster size in MB }} / 1024
                     let cluster_size_gb: f64 = instance.node_memory as f64 / 1024.0;
 
-                    // Cluster cost per year: {{ Size of cluster in GB }} / 64 * 6318
-                    let cluster_cost_per_year: f64 = cluster_size_gb / 64.0 * self.eru_cost as f64 * 100.0;
-    
-                    // Cluster cost per second: {{ Cluster cost per year }} / 31,536,000
-                    let cluster_cost_per_second: f64 = cluster_cost_per_year / 31536000.0;
-
-                    // Cluster cost over month: {{ current month in seconds }} * {{ Cluster cost per second }}
-                    let cluster_cost_over_month = seconds_since_month_start * cluster_cost_per_second as f64; 
+                    let cluster_cost_over_month = ( cluster_size_gb / 64.0 ) * cents_per_gb_current_month;
 
                     // Get instance cost per month
                     metrics::gauge!("ece_allocator_instance_monthly_cost", cluster_cost_over_month as f64, &labels);
