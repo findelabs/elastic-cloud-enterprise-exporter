@@ -211,7 +211,7 @@ impl State {
                     let cluster_size_gb: f64 = instance.node_memory as f64 / 1024.0;
 
                     // Cluster cost per year: {{ Size of cluster in GB }} / 64 * 6318
-                    let cluster_cost_per_year: f64 = cluster_size_gb / 64.0 * 6318.0 * 100.0;
+                    let cluster_cost_per_year: f64 = cluster_size_gb / 64.0 * self.eru_cost as f64 * 100.0;
     
                     // Cluster cost per second: {{ Cluster cost per year }} / 31,536,000
                     let cluster_cost_per_second: f64 = cluster_cost_per_year / 31536000.0;
