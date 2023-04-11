@@ -156,9 +156,6 @@ impl State {
         let month_start_utc = DateTime::<Utc>::from_utc(month_start, Utc);
         let seconds_since_month_start = now.signed_duration_since(month_start_utc).num_seconds() as f64;
 
-        let cents_per_second = 64f64 * self.eru_cost as f64 * 100.0 / 31536000f64;
-        let monthly_cents = seconds_since_month_start / 1024f64 * cents_per_second;
-
         for zone in body.zones {
             log::debug!("\"Working in zone: {}\"", zone.zone_id);
             for allocator in zone.allocators {
@@ -210,9 +207,20 @@ impl State {
                     ];
                     metrics::gauge!("ece_allocator_instance_node_memory", instance.node_memory.clone() as f64, &labels);
 
+                    // Size of cluster in GB: {{ Cluster size in MB }} / 1024
+                    let cluster_size_gb: f64 = instance.node_memory as f64 / 1024.0;
+
+                    // Cluster cost per year: {{ Size of cluster in GB }} / 64 * 6318
+                    let cluster_cost_per_year: f64 = cluster_size_gb / 64.0 * 6318.0 * 100.0;
+    
+                    // Cluster cost per second: {{ Cluster cost per year }} / 31,536,000
+                    let cluster_cost_per_second: f64 = cluster_cost_per_year / 31536000.0;
+
+                    // Cluster cost over month: {{ current month in seconds }} * {{ Cluster cost per second }}
+                    let cluster_cost_over_month = seconds_since_month_start * cluster_cost_per_second as f64; 
+
                     // Get instance cost per month
-                    let cost_for_month = instance.node_memory as f64 * monthly_cents;
-                    metrics::gauge!("ece_allocator_instance_monthly_cost", cost_for_month as f64, &labels);
+                    metrics::gauge!("ece_allocator_instance_monthly_cost", cluster_cost_over_month as f64, &labels);
 
                     if let Some(plans_info) = instance.plans_info {
                         let labels = [
