@@ -19,7 +19,10 @@ pub struct RequestMethod(pub hyper::Method);
 
 pub async fn metrics(Extension(recorder_handle): Extension<PrometheusHandle>, Extension(state): Extension<State>) -> Result<String, RestError> {
     log::info!("{{\"fn\": \"metrics\", \"method\":\"get\"}}");
-    state.get_metrics().await?;
+    match state.get_metrics().await {
+        Ok(_) => metrics::gauge!("ece_cluster_up", 1f64),
+        Err(_) => metrics::gauge!("ece_cluster_up", 0f64)
+    };
     Ok(recorder_handle.render())
 }
 
