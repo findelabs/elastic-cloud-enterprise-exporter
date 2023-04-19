@@ -1,28 +1,22 @@
-use axum::{
-    handler::Handler,
-    routing::{get},
-    Router,
-    middleware,
-    extract::Extension
-};
+use axum::{extract::Extension, handler::Handler, middleware, routing::get, Router};
 use chrono::Local;
-use clap::{crate_name, crate_version, Command, Arg};
+use clap::{crate_name, crate_version, Arg, Command};
 use env_logger::{Builder, Target};
 use log::LevelFilter;
 use std::io::Write;
 use std::net::SocketAddr;
 use tower_http::trace::TraceLayer;
 
+mod allocator;
 mod error;
 mod handlers;
 mod https;
 mod metrics;
-mod state;
-mod allocator;
 mod proxy;
+mod state;
 
 use crate::metrics::{setup_metrics_recorder, track_metrics};
-use handlers::{handler_404, health, root, metrics};
+use handlers::{handler_404, health, metrics, root};
 use state::State;
 
 #[tokio::main]
@@ -126,8 +120,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let recorder_handle = setup_metrics_recorder();
 
     // These should be authenticated
-    let base = Router::new()
-        .route("/", get(root));
+    let base = Router::new().route("/", get(root));
 
     // These should NOT be authenticated
     let standard = Router::new()

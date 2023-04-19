@@ -24,7 +24,7 @@ impl fmt::Display for Error {
             Error::Forbidden => f.write_str("{\"error\": \"Cannot get config: Forbidden\"}"),
             Error::Unauthorized => f.write_str("{\"error\": \"Cannot get config: Unauthorized\"}"),
             Error::NotFound => f.write_str("{\"error\": \"Cannot get config: Not found\"}"),
-            Error::UnknownCode=> f.write_str("{\"error\": \"Caught bad status code\"}"),
+            Error::UnknownCode => f.write_str("{\"error\": \"Caught bad status code\"}"),
             Error::Hyper(ref err) => write!(f, "{{\"error\": \"{}\"}}", err),
             Error::SerdeJson(ref err) => write!(f, "{{\"error\": \"{}\"}}", err),
         }
@@ -42,7 +42,6 @@ impl IntoResponse for Error {
             .unwrap()
     }
 }
-
 
 impl From<hyper::Error> for Error {
     fn from(err: hyper::Error) -> Error {

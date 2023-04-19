@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::collections::HashMap;
 
@@ -10,32 +10,32 @@ pub struct AllocatorsRoot {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Zone {
     pub zone_id: String,
-    pub allocators: Vec<Allocator>
+    pub allocators: Vec<Allocator>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Status {
     pub connected: bool,
     pub healthy: bool,
-    pub maintenance_mode: bool
+    pub maintenance_mode: bool,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Capacity {
-    pub memory: Memory
+    pub memory: Memory,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Memory {
     pub total: u64,
-    pub used: u64
+    pub used: u64,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PlansInfo {
     pub pending: bool,
     pub version: Option<String>,
-    pub zone_count: Option<u64>
+    pub zone_count: Option<u64>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -50,7 +50,7 @@ pub struct Instance {
     pub instance_configuration_id: String,
     pub moving: Option<bool>,
     pub plans_info: Option<PlansInfo>,
-    pub deployment_id: Option<String>
+    pub deployment_id: Option<String>,
 }
 #[derive(Serialize, Deserialize, Debug)]
 pub struct KeyValue {
@@ -66,7 +66,7 @@ pub struct BuildInfo {
 pub struct ExternalLink {
     pub id: String,
     pub label: String,
-    pub uri: String
+    pub uri: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -82,5 +82,5 @@ pub struct Allocator {
     pub metadata: Vec<KeyValue>,
     pub build_info: BuildInfo,
     pub features: Vec<String>,
-    pub external_links: Vec<ExternalLink>
+    pub external_links: Vec<ExternalLink>,
 }
