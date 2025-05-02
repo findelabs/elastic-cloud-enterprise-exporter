@@ -2,7 +2,6 @@ use chrono::DateTime;
 use chrono::Datelike;
 use chrono::NaiveDate;
 use chrono::Utc;
-use clap::ArgMatches;
 use http_auth_basic::Credentials;
 use hyper::header::HeaderValue;
 use hyper::header::AUTHORIZATION;
@@ -12,7 +11,7 @@ use std::error::Error;
 
 use crate::error::Error as RestError;
 use crate::https::{ClientBuilder, HttpsClient};
-use crate::{allocator, proxy};
+use crate::{allocator, proxy, Args};
 
 type BoxResult<T> = Result<T, Box<dyn Error + Send + Sync>>;
 
@@ -23,39 +22,23 @@ pub struct State {
     pub username: Option<String>,
     pub password: Option<String>,
     pub api_key: Option<String>,
-    pub eru_cost: u64,
+    pub eru_cost: f64,
 }
 
 impl State {
-    pub async fn new(opts: ArgMatches) -> BoxResult<Self> {
+    pub async fn new(opts: Args) -> BoxResult<Self> {
         // Set timeout
-        let timeout: u64 = opts
-            .value_of("timeout")
-            .unwrap()
-            .parse()
-            .unwrap_or_else(|_| {
-                eprintln!("Supplied timeout not in range, defaulting to 60");
-                60
-            });
-
-        let eru_cost: u64 = opts
-            .value_of("eru_cost")
-            .unwrap()
-            .parse()
-            .unwrap_or_else(|_| {
-                eprintln!("ERU cost is not with available range, defaulting to 6000");
-                60
-            });
+        let timeout: u64 = opts.timeout;
 
         let client = ClientBuilder::new().timeout(timeout).build()?;
 
         Ok(State {
             client,
-            url: opts.value_of("url").unwrap().to_string(),
-            username: opts.value_of("username").map(str::to_string),
-            password: opts.value_of("password").map(str::to_string),
-            api_key: opts.value_of("apikey").map(str::to_string),
-            eru_cost,
+            url: opts.url,
+            username: opts.username,
+            password: opts.password,
+            api_key: opts.apikey,
+            eru_cost: opts.eru_cost,
         })
     }
 
@@ -90,13 +73,7 @@ impl State {
         };
 
         // Send initial request
-        let response = match self.client.request(req).await {
-            Ok(s) => s,
-            Err(e) => {
-                log::error!("{{\"error\":\"{}\"", e);
-                return Err(RestError::Hyper(e));
-            }
-        };
+        let response = self.client.request(req).await?; 
 
         match response.status().as_u16() {
             404 => return Err(RestError::NotFound),
@@ -111,7 +88,7 @@ impl State {
                 let bytes = hyper::body::to_bytes(response.into_body()).await?;
                 let value: Value = serde_json::from_slice(&bytes)?;
                 log::error!("Bad response body: {}", value);
-                return Err(RestError::UnknownCode);
+                return Err(RestError::ServerError);
             }
         }
     }

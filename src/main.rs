@@ -1,11 +1,18 @@
-use axum::{extract::Extension, handler::Handler, middleware, routing::get, Router};
+use axum::{
+    extract::Extension,
+    middleware,
+    routing::{get},
+    Router,
+};
 use chrono::Local;
-use clap::{crate_name, crate_version, Arg, Command};
+use clap::{crate_name, Parser};
 use env_logger::{Builder, Target};
 use log::LevelFilter;
 use std::io::Write;
 use std::net::SocketAddr;
 use tower_http::trace::TraceLayer;
+use tower::ServiceBuilder;
+use tokio::net::TcpListener;
 
 mod allocator;
 mod error;
@@ -15,81 +22,45 @@ mod metrics;
 mod proxy;
 mod state;
 
-use crate::metrics::{setup_metrics_recorder, track_metrics};
+use crate::metrics::{track_metrics};
 use handlers::{handler_404, health, metrics, root};
 use state::State;
 
+#[derive(Parser, Debug, Clone)]
+#[command(author = "", version, about = crate_name!())]
+pub struct Args {
+    /// Port to listen on
+    #[arg(short = 'P', long, default_value_t = 8080, env = "ECE_PORT")]
+    port: u16,
+
+    /// ECE Username
+    #[arg(short = 'u', long, env = "ECE_USERNAME", required_unless_present = "apikey")]
+    username: Option<String>,
+
+    /// ECE Password
+    #[arg(short = 'p', long, env = "ECE_PASSWORD", required_unless_present = "apikey")]
+    password: Option<String>,
+
+    /// ECE API Key
+    #[arg(short = 'a', long, env = "ECE_APIKEY", conflicts_with = "username")]
+    apikey: Option<String>,
+
+    /// ECE Base URL
+    #[arg(short = 'U', long, env = "ECE_URL")]
+    url: String,
+
+    /// Default global timeout
+    #[arg(short = 't', long, default_value_t = 60, env = "ECE_TIMEOUT")]
+    timeout: u64,
+
+    /// Elastic cost per ERU
+    #[arg(short = 'e', long, default_value_t = 6000.0, env = "ECE_ERU_COST")]
+    eru_cost: f64,
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    let opts = Command::new(crate_name!())
-        .version(crate_version!())
-        .author("")
-        .about(crate_name!())
-        .arg(
-            Arg::new("port")
-                .short('P')
-                .long("port")
-                .help("Set port to listen on")
-                .env("ECE_PORT")
-                .default_value("8080")
-                .takes_value(true),
-        )
-        .arg(
-            Arg::new("username")
-                .short('u')
-                .long("username")
-                .help("ECE Username")
-                .env("ECE_USERNAME")
-                .required_unless_present("apikey")
-                .takes_value(true),
-        )
-        .arg(
-            Arg::new("password")
-                .short('p')
-                .long("password")
-                .help("ECE Password")
-                .env("ECE_PASSWORD")
-                .required_unless_present("apikey")
-                .takes_value(true),
-        )
-        .arg(
-            Arg::new("apikey")
-                .short('a')
-                .long("apikey")
-                .help("ECE API Key")
-                .env("ECE_APIKEY")
-                .required(false)
-                .conflicts_with("username")
-                .takes_value(true),
-        )
-        .arg(
-            Arg::new("url")
-                .short('U')
-                .long("url")
-                .help("ECE Base URL")
-                .env("ECE_URL")
-                .required(true)
-                .takes_value(true),
-        )
-        .arg(
-            Arg::new("timeout")
-                .short('t')
-                .long("timeout")
-                .help("Set default global timeout")
-                .default_value("60")
-                .env("ECE_TIMEOUT")
-                .takes_value(true),
-        )
-        .arg(
-            Arg::new("eru_cost")
-                .short('e')
-                .long("eru_cost")
-                .help("Set elastic cost per ERU")
-                .default_value("6000")
-                .env("ECE_ERU_COST")
-                .takes_value(true),
-        )
-        .get_matches();
+    let args = Args::parse();
 
     // Initialize log Builder
     Builder::new()
@@ -107,17 +78,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .parse_default_env()
         .init();
 
-    // Set port
-    let port: u16 = opts.value_of("port").unwrap().parse().unwrap_or_else(|_| {
-        eprintln!("specified port isn't in a valid range, setting to 8080");
-        8080
-    });
-
     // Create state for axum
-    let state = State::new(opts.clone()).await?;
+    let state = State::new(args.clone()).await?;
 
     // Create prometheus handle
-    let recorder_handle = setup_metrics_recorder();
+    // let recorder_handle = setup_metrics_recorder();
 
     // These should be authenticated
     let base = Router::new().route("/", get(root));
@@ -130,19 +95,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let app = Router::new()
         .merge(base)
         .merge(standard)
-        .layer(TraceLayer::new_for_http())
+        .layer(ServiceBuilder::new().layer(TraceLayer::new_for_http()))
         .route_layer(middleware::from_fn(track_metrics))
-        .layer(Extension(recorder_handle))
+        .fallback(handler_404)
         .layer(Extension(state));
 
-    // add a fallback service for handling routes to unknown paths
-    let app = app.fallback(handler_404.into_service());
+    let addr = SocketAddr::from(([0, 0, 0, 0], args.port));
+    let listener = TcpListener::bind(addr).await.unwrap();
 
-    let addr = SocketAddr::from(([0, 0, 0, 0], port));
     log::info!("Listening on {}", addr);
-    axum::Server::bind(&addr)
-        .serve(app.into_make_service())
-        .await?;
+    axum::serve(listener, app).await?;
 
     Ok(())
 }
